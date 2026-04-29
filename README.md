@@ -83,7 +83,7 @@ AgentOS is an **autonomous agent operating system** that integrates 9 state-of-t
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/agentos.git
+git clone https://github.com/fikriaf/agentos.git
 cd agentos
 
 # Install with uv
@@ -376,8 +376,8 @@ AgentOS is built upon the pioneering research of:
 
 ## 📞 Contact
 
-- GitHub Issues: [github.com/your-org/agentos/issues](https://github.com/your-org/agentos/issues)
-- Discussions: [github.com/your-org/agentos/discussions](https://github.com/your-org/agentos/discussions)
+- GitHub Issues: [github.com/fikriaf/agentos/issues](https://github.com/fikriaf/agentos/issues)
+- Discussions: [github.com/fikriaf/agentos/discussions](https://github.com/fikriaf/agentos/discussions)
 
 ---
 
