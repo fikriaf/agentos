@@ -55,7 +55,7 @@ def cli(ctx, no_shell: bool):
     Run without arguments to enter interactive shell mode.
     Use --no-shell to show banner only.
     """
-    # Print welcome banner
+    # Print welcome banner ONCE
     print_banner("AgentOS")
     console.print("")
     console.print("[dim]  Autonomous Agent Framework with Built-in Safety[/dim]")
@@ -64,7 +64,6 @@ def cli(ctx, no_shell: bool):
     
     # Launch interactive shell if no command specified and not disabled
     if ctx.invoked_subcommand is None and not no_shell:
-        console.print("[cyan]Launching interactive shell...[/cyan]\n")
         shell = AgentOSShell()
         shell.run()
         raise SystemExit(0)

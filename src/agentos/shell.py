@@ -174,7 +174,7 @@ class AgentOSShell:
     def run(self):
         if RICH_AVAILABLE and console:
             console.clear()
-            console.print(self._render_banner())
+            # Banner already shown by CLI, show welcome only
             welcome = """[bold green]✓[/bold green] AgentOS Shell Ready!
 [cyan]Features:[/cyan]
   • Run tasks with natural language
