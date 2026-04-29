@@ -1,13 +1,16 @@
 # AgentOS
 
 <p align="center">
+  <a href="https://github.com/fikriaf/agentos">
+    <img src="https://img.shields.io/badge/GitHub-fikriaf/agentos-blue.svg" alt="GitHub">
+  </a>
   <img src="https://img.shields.io/badge/Version-0.1.0-blue.svg" alt="Version">
   <img src="https://img.shields.io/badge/Python-3.10+-green.svg" alt="Python">
   <img src="https://img.shields.io/badge/License-MIT-orange.svg" alt="License">
   <img src="https://img.shields.io/badge/Agents-Research-red.svg" alt="Type">
 </p>
 
-> **AgentOS** — An autonomous AI agent framework built on cutting-edge research. Combines ROMA, HTAA, ToolTree, MOSAIC, REDEREF, and more into a cohesive CLI.
+> **AgentOS** — An autonomous AI agent framework built on cutting-edge research. Built by [fikriaf](https://github.com/fikriaf).
 
 ## 🎯 Overview
 
