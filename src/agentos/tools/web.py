@@ -29,15 +29,47 @@ class WebTool(BaseTool):
     async def search(
         self,
         query: str,
-        limit: int = 5,
+        limit: int = 10,
     ) -> ToolResult:
-        """Search the web."""
+        """Search the web or arxiv."""
         try:
-            # Use duckduckgo or similar
-            url = "https://html.duckduckgo.com/html/"
-            data = {"q": query, "b": "", "kl": "us-en"}
-            
             http = await self._get_http()
+            
+            # Check if this is an arxiv query
+            query_lower = query.lower()
+            if "arxiv" in query_lower or "paper" in query_lower:
+                # Use arxiv API
+                # Parse query - extract search terms
+                params = query.replace(" ", "+").replace("arxiv", "").replace("paper", "")
+                if params.strip():
+                    url = f"http://export.arxiv.org/api/query?search_query=all:{params}&start=0&max_results={limit}"
+                else:
+                    url = f"http://export.arxiv.org/api/query?search_query=cat:cs.AI&start=0&max_results={limit}"
+                
+                result = await http.execute(url=url)
+                
+                # Parse arxiv XML response
+                import re
+                entries = re.findall(r'<entry>.*?<title>([^<]+)</title>.*?<summary>([^<]+)</summary>', result.output, re.DOTALL)
+                
+                if entries:
+                    items = []
+                    for title, summary in entries[:limit]:
+                        items.append(f"- {title[:80]}\n  {summary[:150]}...")
+                    return ToolResult(
+                        success=True,
+                        output=f"arXiv results ({len(items)}):\n" + "\n".join(items),
+                        execution_time=0,
+                    )
+                
+                return ToolResult(
+                    success=True,
+                    output=f"arXiv search: {url}\n\n{result.output[:2000]}",
+                    execution_time=0,
+                )
+            
+            # Use DuckDuckGo for regular search
+            url = "https://html.duckduckgo.com/html/"
             result = await http.execute(
                 url=url,
                 method="POST",
@@ -47,8 +79,8 @@ class WebTool(BaseTool):
             
             # Parse results
             import re
-            items = []
             matches = re.findall(r'<a class="result__a" href="([^"]*)"[^>]*>([^<]*)</a>', result.output)
+            items = []
             for url, title in matches[:limit]:
                 items.append(f"- {title}: {url}")
             

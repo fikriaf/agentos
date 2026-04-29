@@ -66,7 +66,7 @@ class HTTPClient(BaseTool):
         logger.info(f"HTTP {method}: {url}")
 
         try:
-            async with httpx.AsyncClient(timeout=timeout) as client:
+            async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
                 response = await client.request(
                     method=method.upper(),
                     url=url,
