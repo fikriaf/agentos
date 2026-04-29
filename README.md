@@ -81,109 +81,249 @@ AgentOS is an **autonomous agent operating system** that integrates 9 state-of-t
 
 ## 🖥️ User Interface (CLI)
 
-AgentOS features an attractive **ASCII-art based CLI** with rich visual elements:
+AgentOS features an **interactive shell UI** with beautiful ASCII art and Rich-powered interface:
 
 ### Opening the UI
 
-Simply run any AgentOS command — the UI appears automatically:
+Simply run `agentos` without arguments to launch the interactive shell:
 
 ```bash
-# View system info (shows ASCII banner + colored panels)
-agentos info
+# Launch interactive shell (default)
+agentos
 
-# Show configuration (colored tables)
+# Show banner only (no shell)
+agentos --no-shell
+
+# Or use subcommands directly
+agentos run "Create a web scraper"
 agentos config show
-
-# Interactive wizard mode
-agentos wizard
+agentos sessions
 ```
 
-### UI Components
+### Interactive Shell Features
 
-| Component | Description | Screenshot |
-|-----------|-------------|------------|
-| **ASCII Banner** | Pyfiglet-powered logo (571 fonts) | `___ /   |` |
-| **Rich Tables** | Colored configuration tables | Cyan/Green/Red |
-| **Panels** | Info/Error/Warning boxes | Bordered frames |
-| **Progress Spinners** | Animated loading indicators | Rotating chars |
-| **Interactive Menu** | CLI-based selection menus | Numbered options |
+| Feature | Description |
+|---------|-------------|
+| **ASCII Banner** | Pyfiglet-powered logo on launch |
+| **Welcome Panel** | Feature highlights on startup |
+| **Status Bar** | Model, Safety, Budget, Session info |
+| **7-Step Pipeline** | Real-time execution visualization |
+| **Rich Tables** | Colored configuration & skills tables |
+| **Rich Panels** | Info/Error/Warning boxes |
+| **Task Counter** | Track tasks executed |
 
-### Example UI Screenshots
+### Shell UI Preview
 
-**1. AgentOS Info Panel:**
+**1. Launch & Welcome:**
 ```
-___                    __  ____  _____
+    ___                    __  ____  _____
    /   | ____ ____  ____  / /_/ __ \/ ___/
-  / /| |/ __ `/ _ \/ __ \/ __/ / / /\__ \ 
- / ___ / /_/ /  __/ / / / /_/ /_/ /___/ / 
-/_/  |_\__, /\___/_/ /_/\__/\____//____/  
-      /____/                              
+  / /| |/ __ `/ _ \/ __ \/ __/ / / /\__ \
+ / ___ / /_/ /  __/ / / / /_/ /_/ /___/ /
+/_/  |_\__, /\___/_/ /_/\__/\____//____/
+      /____/
 
-  Autonomous Agent Framework with Built-in Safety
-  Version 0.1.0
-
-╭───────────────────────────────────────────────╮
-│ System Information                            │
-│───────────────────────────────────────────────│
-│ Python Version: 3.10+                         │
-│ OS: Linux                                     │
-│ Framework: AgentOS v0.1.0                      │
-╰───────────────────────────────────────────────╯
+╭────────────── Welcome ───────────────╮
+│ ✓ AgentOS Shell Ready!              │
+│                                      │
+│ Features:                            │
+│   • Run tasks with LLM              │
+│   • 93 built-in skills              │
+│   • ROMA Planning                   │
+│   • MOSAIC Safety                   │
+│   • Session persistence              │
+╰──────────────────────────────────────╯
 ```
 
-**2. Configuration Table:**
+**2. Task Execution:**
 ```
-╭──────────────┬──────────────────────────────╮
-│   Setting    │           Value              │
-╡──────────────╇──────────────────────────────╨
-│ Model        │ minimax-m2.5-free            │
-│ Safety       │ ✓ Enabled                    │
-│ Budget       │ $1.00                        │
-╰──────────────┴──────────────────────────────╯
+━━━ Task #1 ━━━
+Create a Python web scraper
+
+Pipeline:
+  1. Context Loading
+  2. ROMA Planning (Task Decomposition)
+  3. HTAA Tool Grouping
+  4. MOSAIC Safety Check
+  5. ToolTree Execution
+  6. REDEREF Reflection
+  7. State Persistence
+
+⏳ Executing...
+  [1] Loading 93 built-in skills...
+  [2] ROMA: Decomposing task into subtasks...
+  [4] MOSAIC: Verifying action safety...
+  ✓ Safety check passed
+  ✓ Task execution completed!
 ```
 
-**3. Interactive Wizard:**
+**3. Status Bar:**
 ```
-╔═══════════════════════════════════════════╗
-║         AgentOS Setup Wizard              ║
-╠═══════════════════════════════════════════╣
-║  1. Configure API Key                      ║
-║  2. Set Model Parameters                   ║
-║  3. Enable Safety Features                 ║
-║  4. Run First Task                         ║
-║  0. Exit                                   ║
-╚═══════════════════════════════════════════╝
-Select option:
+╭───────────────── Status ──────────────────╮
+│ Model: minimax-m2.5-free                  │
+│ Safety: 🛡️ Enabled                        │
+│ Budget: $1.00                             │
+│ Max Steps: 100                            │
+│ Session: main                             │
+│ Tasks Run: 1                              │
+╰───────────────────────────────────────────╯
+```
+
+### Available Commands in Shell
+
+| Command | Shortcut | Description |
+|---------|----------|-------------|
+| `run <task>` | `r` | Execute a task |
+| `sessions` | `s` | List/manage sessions |
+| `config` | `c` | Show configuration |
+| `skills` | `k` | List available skills |
+| `info` | `i` | System information |
+| `status` | - | Show current status |
+| `clear` | - | Clear screen |
+| `help` | `h` | Show help |
+| `quit` | `q` | Exit AgentOS |
+
+### Examples
+
+```bash
+# Launch shell
+agentos
+
+# In shell, type commands:
+agentos> run Create a REST API with Flask
+agentos> sessions --list
+agentos> config --set budget 5.0
+agentos> help
+agentos> quit
+
+# Or use directly without shell
+agentos run "Build a web scraper" --budget 2.0
+agentos config show
+agentos sessions
 ```
 
 ## 🚀 Quick Start
 
+### Prerequisites
+
+| OS | Requirements |
+|---|---------------|
+| **macOS** | Python 3.10+, Terminal |
+| **Linux** | Python 3.10+, Terminal |
+| **Windows** | Python 3.10+, Command Prompt / PowerShell |
+
 ### Installation
 
+#### 1. Clone Repository
+
 ```bash
-# Clone the repository
 git clone https://github.com/fikriaf/agentos.git
 cd agentos
+```
 
-# Install with uv
+#### 2. Install Python Dependencies
+
+```bash
+# Option A: Using uv (recommended - faster)
+pip install uv
 uv pip install -e . --system
 
-# Or with pip
+# Option B: Using pip
 pip install -e .
 ```
 
-### Configuration
+#### 3. Configure API Key
 
 ```bash
-# Set your API key
+# Set API key (required for LLM)
 agentos config api_key YOUR_API_KEY
 
-# Or set environment variable
-export OPENCODE_ZEN_API_KEY=your_key
+# Or use environment variable
+# macOS / Linux:
+export OPENCODE_ZEN_API_KEY=your_key_here
 
-# View configuration
-agentos config show
+# Windows (Command Prompt):
+set OPENCODE_ZEN_API_KEY=your_key_here
+
+# Windows (PowerShell):
+$env:OPENCODE_ZEN_API_KEY="your_key_here"
 ```
+
+#### 4. Verify Installation
+
+```bash
+agentos info
+```
+
+---
+
+### Platform-Specific Notes
+
+#### macOS
+
+```bash
+# Using Homebrew Python
+brew install python3
+python3 -m pip install -e .
+
+# Or using uv
+brew install uv
+uv pip install -e . --system
+```
+
+#### Linux (Ubuntu/Debian)
+
+```bash
+# Install Python
+sudo apt update
+sudo apt install python3 python3-pip python3-venv
+
+# Create virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate
+pip install -e .
+
+# Or install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.local/bin/env
+uv pip install -e . --system
+```
+
+#### Linux (Arch)
+
+```bash
+sudo pacman -S python python-pip
+pip install -e .
+```
+
+#### Windows
+
+```bash
+# Using Python from python.org
+# Download from https://www.python.org/downloads/
+
+# Install using pip
+pip install -e .
+
+# Or using uv (PowerShell)
+pip install uv
+uv pip install -e . --system
+```
+
+#### WSL (Windows Subsystem for Linux)
+
+```bash
+# Install WSL first
+wsl --install
+
+# Then follow Linux instructions above
+cd /mnt/d/script/OS/agentos
+pip install -e .
+```
+
+---
+
+### Configuration
 
 ### Basic Usage
 
