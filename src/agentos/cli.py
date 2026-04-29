@@ -34,6 +34,7 @@ from agentos.ui import (
     AgentOSBanner, AgentOSPanels, AgentOSTables, AgentOSMenu,
     print_banner, print_success, print_error, print_warning, print_table
 )
+from agentos.shell import AgentOSShell
 
 console = Console()
 logger = get_logger("agentos.cli")
@@ -44,16 +45,29 @@ def get_api_key() -> str:
     return os.environ.get("OPENCODE_ZEN_API_KEY") or os.environ.get("OPENROUTER_API_KEY") or ""
 
 
-@click.group()
+@click.group(invoke_without_command=True)
 @click.version_option(version=__version__)
-def cli():
-    """AgentOS - Autonomous Agent CLI Framework with Built-in Safety."""
+@click.option("--no-shell", is_flag=True, help="Disable interactive shell mode")
+@click.pass_context
+def cli(ctx, no_shell: bool):
+    """AgentOS - Autonomous Agent CLI Framework with Built-in Safety.
+    
+    Run without arguments to enter interactive shell mode.
+    Use --no-shell to show banner only.
+    """
     # Print welcome banner
     print_banner("AgentOS")
     console.print("")
     console.print("[dim]  Autonomous Agent Framework with Built-in Safety[/dim]")
     console.print("[dim]  Version {}[/dim]".format(__version__))
     console.print("")
+    
+    # Launch interactive shell if no command specified and not disabled
+    if ctx.invoked_subcommand is None and not no_shell:
+        console.print("[cyan]Launching interactive shell...[/cyan]\n")
+        shell = AgentOSShell()
+        shell.run()
+        raise SystemExit(0)
 
 
 # =============================================================================
