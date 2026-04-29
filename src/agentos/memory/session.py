@@ -101,7 +101,7 @@ class SessionManager:
             return None
 
         try:
-            data = json.loads(meta_path.read_text())
+            data = json.loads(meta_path.read_text(encoding="utf-8"))
             return Session(
                 session_id=data["session_id"],
                 task=data["task"],

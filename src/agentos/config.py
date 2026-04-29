@@ -40,7 +40,7 @@ class AgentOSConfig:
             return cls()
 
         try:
-            with open(path) as f:
+            with open(path, encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
             return cls(**{k: v for k, v in data.items() if k in cls.__dataclass_fields__})
         except Exception:
@@ -49,7 +49,7 @@ class AgentOSConfig:
     def to_file(self, path: Path) -> None:
         """Save config to file."""
         path.parent.mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             yaml.dump(asdict(self), f, default_flow_style=False)
 
     @property

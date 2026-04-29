@@ -48,7 +48,7 @@ class SkillsManager:
                 skill_path = skill_dir / "SKILL.md"
                 if skill_path.exists():
                     # Extract skill name and description from frontmatter
-                    content = skill_path.read_text()
+                    content = skill_path.read_text(encoding="utf-8")
                     name = skill_dir.name
                     description = self._extract_description(content)
                     

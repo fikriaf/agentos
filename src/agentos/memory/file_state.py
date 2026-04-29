@@ -81,7 +81,7 @@ class FileStateManager:
             return None
 
         try:
-            data = json.loads(path.read_text())
+            data = json.loads(path.read_text(encoding="utf-8"))
             logger.info(f"Snapshot loaded: {session_id}")
             return data
         except Exception as e:
@@ -97,7 +97,7 @@ class FileStateManager:
         snapshots = []
         for path in self.workspace.glob("snapshot_*.json"):
             try:
-                data = json.loads(path.read_text())
+                data = json.loads(path.read_text(encoding="utf-8"))
                 snapshots.append({
                     "session_id": data.get("session_id"),
                     "task": data.get("task", "")[:50],
