@@ -1,0 +1,117 @@
+\begin{thebibliography}{17}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Yao et~al.(2022)Yao, Zhao, Yu, Du, Shafran, Narasimhan, and
+  Cao]{yao2022react}
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan,
+  and Yuan Cao.
+\newblock React: Synergizing reasoning and acting in language models.
+\newblock \emph{arXiv preprint arXiv:2210.03629}, 2022.
+
+\bibitem[Shinn et~al.(2023)Shinn, Labash, and Gopinath]{shinn2023reflexion}
+Noah Shinn, Beck Labash, and Ashwin Gopinath.
+\newblock Reflexion: Language agents with verbal reinforcement learning.
+\newblock \emph{arXiv preprint arXiv:2303.11366}, 2023.
+
+\bibitem[Wei et~al.(2022)Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le,
+  and Zhou]{wei2022chain}
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia,
+  Ed~Chi, Quoc Le, and Denny Zhou.
+\newblock Chain-of-thought prompting elicits reasoning in large language
+  models.
+\newblock \emph{arXiv preprint arXiv:2201.11903}, 2022.
+
+\bibitem[Schick et~al.(2023)Schick, Dwivedi-Yu, Dess\`i, Raileanu, Lomeli,
+  Zettlemoyer, Cancedda, and Scialom]{schick2023toolformer}
+Timo Schick, Jane Dwivedi-Yu, Roberto Dess\`i, Roberta Raileanu, Maria Lomeli,
+  Luke Zettlemoyer, Nicola Cancedda, and Thomas Scialom.
+\newblock Toolformer: Language models can teach themselves to use tools.
+\newblock \emph{arXiv preprint arXiv:2302.04761}, 2023.
+
+\bibitem[Nakano et~al.(2021)Nakano, Hilton, Balaji, Wu, Ouyang, Kim, Hesse,
+  Jain, Kosaraju, Saunders, et~al.]{nakano2021webgpt}
+Reiichiro Nakano, Jacob Hilton, Suchir Balaji, Jeff Wu, Long Ouyang, Christina
+  Kim, Christopher Hesse, Shantanu Jain, Vineet Kosaraju, William Saunders,
+  et~al.
+\newblock Webgpt: Browser-assisted question-answering with human feedback.
+\newblock \emph{arXiv preprint arXiv:2112.09332}, 2021.
+
+\bibitem[Doshi(2026)]{doshi2026safe}
+Aarya et~al. Doshi.
+\newblock Towards verifiably safe tool use for llm agents.
+\newblock \emph{arXiv preprint arXiv:2601.08012}, 2026.
+
+\bibitem[Sha(2025)]{sha2025safety}
+Zeyang et~al. Sha.
+\newblock Agent safety alignment via reinforcement learning.
+\newblock \emph{arXiv preprint arXiv:2507.08270}, 2025.
+
+\bibitem[Hou et~al.(2025)Hou, Zhao, Wang, and Wang]{hou2025mcp}
+Xinyi Hou, Yanjie Zhao, Shenao Wang, and Haoyu Wang.
+\newblock Model context protocol (mcp): Landscape, security threats, and future
+  research directions.
+\newblock \emph{arXiv preprint arXiv:2503.23278}, 2025.
+
+\bibitem[Yao et~al.(2023)Yao, Yu, Zhao, Shafran, Griffiths, Cao, and
+  Narasimhan]{yao2023tree}
+Shunyu Yao, Dian Yu, Jeffrey Zhao, Izhak Shafran, Thomas~L. Griffiths, Yuan
+  Cao, and Karthik Narasimhan.
+\newblock Tree of thoughts: Deliberate problem solving with large language
+  models.
+\newblock \emph{arXiv preprint arXiv:2305.10601}, 2023.
+
+\bibitem[Huang et~al.(2026)Huang, Zhang, Ma, Wang, Wang, Jiang, Zeng, Han, Gao,
+  and Shang]{htaa2026}
+Chengrui Huang, Junshuo Zhang, Zhiyuan Ma, Xikun Wang, Ximeng Wang, Meng Jiang,
+  Gang Zeng, Zhao Han, Shenghan Gao, and Shuo Shang.
+\newblock Htaa: Enhancing llm planning via hybrid toolset agentization and
+  adaptation.
+\newblock \emph{arXiv preprint arXiv:2604.10917}, 2026.
+
+\bibitem[Yang(2026)]{yang2026tooltree}
+Shuo et~al. Yang.
+\newblock Tooltree: Efficient llm agent tool planning via dual-feedback monte
+  carlo tree search and bidirectional pruning.
+\newblock \emph{arXiv preprint arXiv:2603.12740}, 2026.
+
+\bibitem[Zhou(2026)]{mcpshield2026}
+Zhenhong et~al. Zhou.
+\newblock Mcpshield: A security cognition layer for adaptive trust calibration
+  in model context protocol agents.
+\newblock \emph{arXiv preprint arXiv:2602.14281}, 2026.
+
+\bibitem[Park et~al.(2023)Park, O'Brien, Cai, Morris, Liang, and
+  Bernstein]{park2023generative}
+Joon~Sung Park, Joseph~C. O'Brien, Carrie~J. Cai, Meredith~Ringel Morris, Percy
+  Liang, and Michael~S. Bernstein.
+\newblock Generative agents: Interactive simulacra of human behavior.
+\newblock \emph{arXiv preprint arXiv:2304.03442}, 2023.
+
+\bibitem[Wang et~al.(2023)Wang, Xie, Jiang, Mandlekar, Xiao, Zhu, Fan, and
+  Anandkumar]{wang2023voyager}
+Guanzhi Wang, Yuqi Xie, Yunfan Jiang, Ajay Mandlekar, Chaowei Xiao, Yuke Zhu,
+  Linxi Fan, and Anima Anandkumar.
+\newblock Voyager: An open-ended embodied agent with large language models.
+\newblock \emph{arXiv preprint arXiv:2305.16291}, 2023.
+
+\bibitem[Liu et~al.(2026)Liu, Zhao, et~al.]{liu2026claudecode}
+Jiacheng Liu, Xiaohan Zhao, et~al.
+\newblock Dive into claude code: The design space of today's and future ai
+  agent systems.
+\newblock \emph{arXiv preprint arXiv:2604.14228}, 2026.
+
+\bibitem[Richards(2023)]{autogpt2023}
+Toran~Bruce Richards.
+\newblock Autogpt: An autonomous gpt-4 experiment, 2023.
+\newblock GitHub: https://github.com/Significant-Gravitas/AutoGPT.
+
+\bibitem[Nakajima(2023)]{babyagi2023}
+Yohei Nakajima.
+\newblock Babyagi, 2023.
+\newblock GitHub: https://github.com/yoheinakajima/babyagi.
+
+\end{thebibliography}
