@@ -1,6 +1,7 @@
 """Web tools for AgentOS - search and extract web content."""
 
 import asyncio
+import re
 from typing import Optional
 from agentos.tools.base import BaseTool, ToolResult
 from agentos.utils.logger import get_logger
@@ -38,18 +39,23 @@ class WebTool(BaseTool):
             # Check if this is an arxiv query
             query_lower = query.lower()
             if "arxiv" in query_lower or "paper" in query_lower:
-                # Use arxiv API
-                # Parse query - extract search terms
-                params = query.replace(" ", "+").replace("arxiv", "").replace("paper", "")
-                if params.strip():
-                    url = f"http://export.arxiv.org/api/query?search_query=all:{params}&start=0&max_results={limit}"
+                # Use arxiv API - clean query first
+                # Remove filler words
+                clean_q = query
+                for word in ['arxiv', 'paper', 'latest', 'recent', 'new', 'find', 'search', 'for', 'about', 'the', 'a', 'an']:
+                    clean_q = re.sub(rf'\b{word}\b', '', clean_q, flags=re.IGNORECASE)
+                # Clean up extra spaces and +
+                clean_q = '+'.join(clean_q.split())
+                clean_q = clean_q.strip('+')
+                
+                if clean_q:
+                    url = f"http://export.arxiv.org/api/query?search_query=all:{clean_q}&start=0&max_results={limit}"
                 else:
                     url = f"http://export.arxiv.org/api/query?search_query=cat:cs.AI&start=0&max_results={limit}"
                 
                 result = await http.execute(url=url)
                 
                 # Parse arxiv XML response
-                import re
                 entries = re.findall(r'<entry>.*?<title>([^<]+)</title>.*?<summary>([^<]+)</summary>', result.output, re.DOTALL)
                 
                 if entries:
@@ -78,7 +84,6 @@ class WebTool(BaseTool):
             )
             
             # Parse results
-            import re
             matches = re.findall(r'<a class="result__a" href="([^"]*)"[^>]*>([^<]*)</a>', result.output)
             items = []
             for url, title in matches[:limit]:

@@ -121,7 +121,7 @@ Focus on:
 - Assign the RIGHT tool to each task"""
 
 # Safety check prompt (MOSAIC)
-SAFETY_PROMPT = """You are a safety checker following MOSAIC (Modular Open Security Agent Integration Concept).
+SAFETY_PROMPT = """You are a safety checker following MOSAIC.
 
 Analyze the proposed action for potential risks.
 
@@ -137,17 +137,26 @@ Analyze the proposed action for potential risks.
   "decision": "proceed|refuse|verify",
   "risk_level": "low|medium|high|critical",
   "reason": "Explanation",
-  "alternatives": ["safer option 1", "safer option 2"],
-  "verification_steps": ["step 1", "step 2"]
+  "alternatives": ["safer option 1"],
+  "verification_steps": ["step 1"]
 }}
 ```
 
-Consider:
-- Data privacy and security
-- System integrity
-- Reversibility of action
-- Potential for misuse
-- User intent validation"""
+## Safety Guidelines
+ALWAYS proceed for:
+- web searches and file reads (safe, read-only)
+- queries to APIs like arxiv, GitHub, search engines
+- file operations that don't modify system files
+
+REFUSE only for:
+- Dangerous commands: rm -rf, fork bombs, disk wipe
+- Malicious downloads: curl/wget | sh
+- System modifications: chmod 777, format
+
+VERIFICATION for:
+- Modifications to system files
+- Network operations that could leak data
+- Commands modifying important files"""
 
 # Executor prompt
 EXECUTOR_PROMPT = """You are a tool execution planner.

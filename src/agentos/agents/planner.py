@@ -104,7 +104,7 @@ class PlannerAgent:
         Returns:
             Parsed TaskPlan
         """
-        # Try to extract JSON
+        # Try to extract JSON first
         json_match = re.search(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", response)
         if json_match:
             try:
@@ -113,7 +113,62 @@ class PlannerAgent:
             except json.JSONDecodeError as e:
                 logger.warning(f"JSON parse failed: {e}")
 
-        # Fallback: create simple plan
+        # Parse simple numbered list from response
+        lines = response.strip().split('\n')
+        steps = []
+        for line in lines:
+            # Match "1. Something" or "- Something" or "* Something"
+            match = re.match(r'^\s*(?:\d+[\.\)]|[-*])\s*(.+)', line)
+            if match and match.group(1).strip():
+                desc = match.group(1).strip()
+                # Skip headers, empty lines
+                if len(desc) > 5 and not desc.lower().startswith(('step', 'task', 'output', 'example')):
+                    steps.append(desc)
+
+        if len(steps) >= 2:
+            # Build plan from steps
+            subtasks = []
+            for i, desc in enumerate(steps, 1):
+                subtask = SubTask(
+                    id=i,
+                    description=desc,
+                    tools_needed=[],
+                    dependencies=set(),
+                    estimated_cost=0.001,
+                )
+                subtasks.append(subtask)
+
+            parallel_groups = [[t.id] for t in subtasks]
+            return TaskPlan(
+                task_id=f"plan_{hash(original_task) % 10000}",
+                original_task=original_task,
+                subtasks=subtasks,
+                parallel_groups=parallel_groups,
+                estimated_total_cost=sum(t.estimated_cost for t in subtasks),
+            )
+
+        # Fallback: split original task on "->" (our standard pipeline format)
+        steps = [s.strip() for s in original_task.split('->') if s.strip()]
+        if len(steps) >= 2:
+            subtasks = [
+                SubTask(
+                    id=i,
+                    description=desc,
+                    tools_needed=[],
+                    dependencies=set(),
+                    estimated_cost=0.001,
+                )
+                for i, desc in enumerate(steps, 1)
+            ]
+            return TaskPlan(
+                task_id=f"fallback_{hash(original_task) % 10000}",
+                original_task=original_task,
+                subtasks=subtasks,
+                parallel_groups=[[t.id] for t in subtasks],
+                estimated_total_cost=sum(t.estimated_cost for t in subtasks),
+            )
+
+        # Ultimate fallback: create meaningful steps based on task keywords
         return self._create_fallback_plan(original_task, response)
 
     def _build_plan(self, data: dict, original_task: str) -> TaskPlan:
@@ -194,24 +249,78 @@ class PlannerAgent:
             response: Raw LLM response
 
         Returns:
-            Simple TaskPlan
+            TaskPlan from numbered list
         """
         logger.warning("Using fallback plan parsing")
-
-        # Simple: treat entire response as single task
+        
+        # Try to extract numbered list from response
+        # Look for patterns like "1. Do something" or "- Do something"
+        lines = response.strip().split('\n')
+        subtasks = []
+        task_id = 1
+        
+        for line in lines:
+            # Clean up the line
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Remove numbering like "1." or "1)" or just "-"
+            clean = re.sub(r'^\d+[\.\)]\s*', '', line)
+            clean = re.sub(r'^-\s*', '', clean)
+            
+            if clean and len(clean) > 3:
+                subtasks.append(SubTask(
+                    id=task_id,
+                    description=clean[:200],
+                    tools_needed=["web", "file", "bash"],
+                    estimated_cost=0.001,
+                ))
+                task_id += 1
+        
+        # If no numbered items found, treat whole response as single task
+        if not subtasks:
+            # Split by common delimiters
+            parts = re.split(r'\n+|(?:\s*->\s*)', task)
+            for i, part in enumerate(parts):
+                part = part.strip()
+                if part and len(part) > 2:
+                    subtasks.append(SubTask(
+                        id=i+1,
+                        description=part[:200],
+                        tools_needed=["web", "file", "bash"],
+                        estimated_cost=0.001,
+                    ))
+        
+        # Final fallback: split on "->"
+        if not subtasks:
+            steps = [s.strip() for s in task.split('->') if s.strip()]
+            for i, step in enumerate(steps):
+                subtasks.append(SubTask(
+                    id=i+1,
+                    description=step[:200],
+                    tools_needed=["web", "file", "bash"],
+                    estimated_cost=0.001,
+                ))
+        
+        # Ultimate fallback: single task
+        if not subtasks:
+            subtasks = [SubTask(
+                id=1,
+                description=task[:200],
+                tools_needed=["web"],
+                estimated_cost=0.001,
+            )]
+        
+        # Build parallel groups - each step runs after previous
+        groups = [[i+1] for i in range(len(subtasks))]
+        
         return TaskPlan(
             task_id=f"plan_{task[:20].replace(' ', '_')}",
             original_task=task,
-            subtasks=[
-                SubTask(
-                    id=1,
-                    description=response[:500],  # First 500 chars
-                    tools_needed=["bash"],
-                    estimated_cost=0.001,
-                )
-            ],
-            parallel_groups=[[1]],
-            estimated_total_cost=0.001,
+            subtasks=subtasks,
+            parallel_groups=groups,
+            estimated_total_cost=len(subtasks) * 0.001,
         )
 
     async def _reduce_scope(

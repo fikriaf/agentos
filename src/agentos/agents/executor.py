@@ -227,36 +227,54 @@ class ToolExecutor:
             # Plan tool calls
             tool_calls = await self.plan_tools(subtask)
             if not tool_calls:
-                # Generate a basic command based on task description
+                # Generate tool call based on task description - SMART DETECTION
                 desc = subtask.description.lower()
-                if "flask" in desc and "install" in desc:
-                    tool_calls = [
-                        ToolCall(
-                            tool_name="bash",
-                            args={"command": "python -m pip install flask"},
-                            reason="Install Flask package",
-                            task_id=subtask.id,
-                        )
-                    ]
-                elif "flask" in desc and "create" in desc:
-                    tool_calls = [
-                        ToolCall(
-                            tool_name="bash",
-                            args={"command": "python -c \"print('Flask placeholder')\""},
-                            reason="Create Flask app placeholder",
-                            task_id=subtask.id,
-                        )
-                    ]
+                
+                # Search/arxiv/paper tasks -> use web tool
+                if any(k in desc for k in ['search', 'arxiv', 'paper', 'find gap', 'explor', 'find solution', 'latest', 'research']):
+                    # Extract search query
+                    query = subtask.description
+                    query = re.sub(r'^(search|find|look for|explor|discover|get)\s+', '', query, flags=re.IGNORECASE)
+                    query = re.sub(r'(using|about|on|for|related to)\s+', ' ', query, flags=re.IGNORECASE)
+                    query = re.sub(r'\s+', ' ', query).strip()[:100]
+                    
+                    tool_calls = [ToolCall(
+                        tool_name="web",
+                        args={"action": "search", "query": query},
+                        reason=f"Auto-search: {query}",
+                        task_id=subtask.id,
+                    )]
+                    logger.info(f"Auto-detected web search: {query}")
+                
+                # read_file/file tasks -> use file tool
+                elif any(k in desc for k in ['read', 'file']):
+                    path_match = re.search(r'[`"]?([/\w.-]+\.\w+)[`"]?', subtask.description)
+                    path = path_match.group(1) if path_match else "/tmp/unknown"
+                    tool_calls = [ToolCall(
+                        tool_name="file",
+                        args={"action": "read", "path": path},
+                        reason=f"Read file: {path}",
+                        task_id=subtask.id,
+                    )]
+                
+                # Implementation tasks
+                elif any(k in desc for k in ['implement', 'write code', 'creat']):
+                    tool_calls = [ToolCall(
+                        tool_name="bash",
+                        args={"command": "echo 'Implementation placeholder'"},
+                        reason="Implementation task",
+                        task_id=subtask.id,
+                    )]
+                
+                # Default: web search
                 else:
-                    # Last resort - list current directory
-                    tool_calls = [
-                        ToolCall(
-                            tool_name="bash",
-                            args={"command": "dir"},
-                            reason="List current directory",
-                            task_id=subtask.id,
-                        )
-                    ]
+                    tool_calls = [ToolCall(
+                        tool_name="web",
+                        args={"action": "search", "query": subtask.description[:100]},
+                        reason=f"Search: {subtask.description[:50]}",
+                        task_id=subtask.id,
+                    )]
+                    logger.info(f"Default to web search: {subtask.description[:50]}")
 
             # Execute tool calls sequentially
             all_output = []
