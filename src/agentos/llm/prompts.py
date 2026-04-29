@@ -147,6 +147,10 @@ ALWAYS proceed for:
 - web searches and file reads (safe, read-only)
 - queries to APIs like arxiv, GitHub, search engines
 - file operations that don't modify system files
+- test execution and running test suites
+- development commands: npm test, pytest, cargo test
+- code analysis and benchmarking
+- documentation generation
 
 REFUSE only for:
 - Dangerous commands: rm -rf, fork bombs, disk wipe

@@ -54,8 +54,25 @@ class SkillsTool(BaseTool):
         results = mgr.search_skills(query)
         
         lines = []
-        for name, desc in results:
-            lines.append(f"- {name}: {desc}")
+        # Handle different return formats safely
+        if isinstance(results, dict):
+            for name, desc in results.items():
+                lines.append(f"- {name}: {desc}")
+        elif isinstance(results, list):
+            for item in results:
+                if isinstance(item, tuple) and len(item) >= 2:
+                    lines.append(f"- {item[0]}: {item[1]}")
+                elif isinstance(item, dict):
+                    lines.append(f"- {item.get('name', 'unknown')}: {item.get('description', '')[:50]}")
+                else:
+                    lines.append(f"- {item}")
+        
+        if not lines:
+            return ToolResult(
+                success=True,
+                output=f"Found 0 matches:\n\nQuery: {query}",
+                execution_time=0,
+            )
         
         return ToolResult(
             success=True,

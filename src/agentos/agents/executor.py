@@ -266,8 +266,61 @@ class ToolExecutor:
                         task_id=subtask.id,
                     )]
                 
-                # Default: web search
-                else:
+                # Test/run/benchmark tasks -> use skills tool
+                elif any(k in desc for k in ['test', 'run', 'benchmark', 'execute']):
+                    tool_calls = [ToolCall(
+                        tool_name="web",
+                        args={"action": "search", "query": subtask.description[:100]},
+                        reason=f"Web search: {subtask.description[:50]}",
+                        task_id=subtask.id,
+                    )]
+                
+                # Implementation - don't run bash, just search for info
+                elif any(k in desc for k in ['implement', 'technical']):
+                    tool_calls = [ToolCall(
+                        tool_name="web",
+                        args={"action": "search", "query": subtask.description[:100]},
+                        reason=f"Search for implementation: {subtask.description[:50]}",
+                        task_id=subtask.id,
+                    )]
+                
+                # Bug fixing
+                elif any(k in desc for k in ['bug', 'fix', 'error']):
+                    tool_calls = [ToolCall(
+                        tool_name="web",
+                        args={"action": "search", "query": subtask.description[:100]},
+                        reason=f"Search for solutions: {subtask.description[:50]}",
+                        task_id=subtask.id,
+                    )]
+                
+                # Analysis
+                elif any(k in desc for k in ['analys', 'data']):
+                    tool_calls = [ToolCall(
+                        tool_name="web",
+                        args={"action": "search", "query": subtask.description[:100]},
+                        reason=f"Search analysis: {subtask.description[:50]}",
+                        task_id=subtask.id,
+                    )]
+                
+                # Analysis
+                elif any(k in desc for k in ['analys', 'data']):
+                    tool_calls = [ToolCall(
+                        tool_name="web",
+                        args={"action": "search", "query": subtask.description[:100]},
+                        reason=f"Search analysis: {subtask.description[:50]}",
+                        task_id=subtask.id,
+                    )]
+                
+                # Documentation
+                elif any(k in desc for k in ['doc', 'documentation', 'readme']):
+                    tool_calls = [ToolCall(
+                        tool_name="web",
+                        args={"action": "search", "query": subtask.description[:100]},
+                        reason=f"Search docs: {subtask.description[:50]}",
+                        task_id=subtask.id,
+                    )]
+                
+                # Default: web search (safer than bash)
                     tool_calls = [ToolCall(
                         tool_name="web",
                         args={"action": "search", "query": subtask.description[:100]},
