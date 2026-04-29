@@ -42,6 +42,7 @@ class HTTPClient(BaseTool):
         json: Optional[dict] = None,
         data: Optional[str] = None,
         timeout: Optional[int] = None,
+        **kwargs,  # Accept unexpected kwargs for compatibility
     ) -> ToolResult:
         """Execute HTTP request.
 

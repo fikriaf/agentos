@@ -1,7 +1,9 @@
 """Shell tool for executing commands."""
 
 import asyncio
+import os
 import shlex
+import sys
 import time
 from dataclasses import dataclass
 from typing import Optional
@@ -11,6 +13,24 @@ from agentos.tools.base import BaseTool, ToolResult
 from agentos.utils.logger import get_logger
 
 logger = get_logger("agentos.tools.shell")
+
+
+def get_platform_commands() -> dict:
+    """Get platform-specific command mappings."""
+    is_windows = sys.platform.startswith("win") or os.name == "nt"
+    
+    return {
+        "is_windows": is_windows,
+        "mkdir": "md" if is_windows else "mkdir",
+        "ls": "dir" if is_windows else "ls",
+        "cp": "copy" if is_windows else "cp",
+        "mv": "move" if is_windows else "mv",
+        "rm": "del /q" if is_windows else "rm",
+        "rmdir": "rmdir /s /q" if is_windows else "rm -rf",
+        "cat": "type" if is_windows else "cat",
+        "pwd": "cd" if is_windows else "pwd",
+        "home": os.environ.get("USERPROFILE") or os.environ.get("HOME") or "~",
+    }
 
 
 @dataclass
@@ -60,6 +80,40 @@ class ShellTool(BaseTool):
         timeout = timeout or self.config.timeout
         cwd = cwd or self.config.cwd
 
+        # Detect platform
+        platform_info = get_platform_commands()
+        is_windows = platform_info["is_windows"]
+        
+        if is_windows:
+            # Convert Linux commands to Windows equivalents
+            if command.startswith("mkdir "):
+                cmd_part = command[6:].strip()
+                command = f"cmd /c md {cmd_part}"
+            elif command == "ls" or command.startswith("ls "):
+                args = command[3:] if len(command) > 3 else ""
+                command = f"cmd /c dir {args}"
+            elif " && " in command:
+                command = command.replace(" && ", " & ")
+            elif " -la" in command or " -al" in command:
+                command = command.replace(" -la", "").replace(" -al", "")
+            elif " -la" in command:
+                command = command.replace(" -la", "")
+            elif command.startswith("rm "):
+                cmd_part = command[3:].strip()
+                command = f"cmd /c del {cmd_part}"
+            elif command.startswith("rmdir "):
+                command = command.replace("rmdir ", "cmd /c rmdir /s /q ")
+            elif command.startswith("cp ") or command.startswith("copy "):
+                if command.startswith("cp "):
+                    command = "cmd /c copy " + command[3:]
+            elif command.startswith("cat "):
+                command = command.replace("cat ", "cmd /c type ", 1)
+            elif command.startswith("cd "):
+                command = f"cmd /c {command}"
+            else:
+                # Wrap in cmd /c for other commands
+                command = f"cmd /c {command}"
+        
         logger.info(f"Executing: {command[:100]}...")
 
         try:

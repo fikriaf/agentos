@@ -65,6 +65,13 @@ Given a user task, decompose it into atomic subtasks that can be executed indepe
 - Maximum {max_parallel} tasks can run in parallel
 - Estimate cost for each task (token usage)
 - Identify dependencies between tasks
+- IMPORTANT: Generate CROSS-PLATFORM subtasks that work on BOTH Windows and Linux
+
+## Cross-Platform Guidelines
+- Use "python" not "python3"
+- Use explicit file paths: D:\\projects\\myflask\\app.py (Windows) or ~/projects/myflask/app.py (Linux)
+- For pip: "pip install" or "py -m pip install"
+- For venv: "python -m venv venv" then "venv\\Scripts\\activate" (Windows) or "source venv/bin/activate" (Linux)
 
 ## Output Format
 Return a JSON plan:
@@ -73,8 +80,8 @@ Return a JSON plan:
   "subtasks": [
     {{
       "id": 1,
-      "description": "Task description",
-      "tools_needed": ["tool1", "tool2"],
+      "description": "Create a Flask app at D:\\projects\\myflask\\app.py with GET /api/items and POST /api/items endpoints",
+      "tools_needed": ["write_file", "bash"],
       "dependencies": [],
       "estimated_cost": 0.001
     }}
@@ -88,7 +95,8 @@ Focus on:
 - Atomic, independently executable subtasks
 - Minimal dependencies
 - Efficient parallelization
-- Realistic cost estimation"""
+- Realistic cost estimation
+- Cross-platform compatible commands"""
 
 # Safety check prompt (MOSAIC)
 SAFETY_PROMPT = """You are a safety checker following MOSAIC (Modular Open Security Agent Integration Concept).
@@ -130,20 +138,28 @@ Given a subtask and available tools, plan the exact tool calls needed.
 ## Available Tools
 {tools}
 
+## IMPORTANT: Cross-Platform Commands
+- Use commands that work on BOTH Windows AND Linux/WSL
+- NEVER use: ls, mkdir, rm, cat, cp, mv (these only work on Linux/Mac)
+- ALWAYS use: dir, md, del, type, copy, move (or wrap with cmd /c on Windows)
+- For file operations, use explicit paths like: D:\\projects\\myflask\\app.py
+- For Python: use "python" not "python3"
+- For pip: use "pip install" or "py -m pip install"
+
 ## Output Format
 ```json
 {{
   "tool_calls": [
     {{
       "tool": "bash",
-      "args": {{"command": "ls -la"}},
-      "reason": "Why this tool"
+      "args": {{"command": "python -m pip install flask"}},
+      "reason": "Install Flask"
     }}
   ]
 }}
 ```
 
-Plan efficient, minimal tool sequences."""
+Plan efficient, minimal tool sequences with cross-platform compatible commands."""
 
 # Reflection prompt (REDEREF)
 REFLECTION_PROMPT = """Analyze the execution results and decide next steps.
