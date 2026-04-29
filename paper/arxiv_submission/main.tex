@@ -13,7 +13,7 @@
 \usepackage{url}
 \usepackage{hyperref}
 
-\title{AgentOS: A Pipeline Architecture for Unified Autonomous Task Planning, Execution, and Safety in LLM-Based Agents}
+\title{AgentOS: An Agentic Framework with Built-in Safety and Extensible Skills via ROMA Decomposition and MOSAIC Verification}
 
 \author{
   Fikri Armia Fahmi \\
@@ -24,7 +24,7 @@
 
 %%% PDF metadata
 \hypersetup{
-  pdftitle={AgentOS: A Pipeline Architecture for Unified Autonomous Task Planning, Execution, and Safety in LLM-Based Agents},
+  pdftitle={AgentOS: An Agentic Framework with Built-in Safety and Extensible Skills via ROMA Decomposition and MOSAIC Verification},
   pdfsubject={cs.AI, cs.CL, cs.MA, cs.SE},
   pdfauthor={Fikri Armia Fahmi},
   pdfkeywords={autonomous agents, large language models, task planning, tool use, AI safety, CLI framework, MCP integration, LLM agents, ROMA, HTAA, MOSAIC, REDEREF},
@@ -126,25 +126,8 @@ The pipeline consists of: (1) Context Engineering, (2) Planning (ROMA + INTENT),
 
 \begin{figure}[htbp]
 \centering
-\fbox{
-\begin{minipage}{0.92\linewidth}
-\small
-\begin{tabbing}
-User Input \= $\rightarrow$ Context Engineering \= $\rightarrow$ ROMA + INTENT Planner \\
-           \>                                    \> $\downarrow$ \\
-           \>                      HTAA + ToolTree Executor \\
-           \>                                    \> $\downarrow$ \\
-           \>                           MOSAIC Safety Check / Refuse \\
-           \>                                    \> $\downarrow$ \\
-           \>                    InfiAgent + ChromaDB Memory \\
-           \>                                    \> $\downarrow$ \\
-           \>                           REDEREF Reflection \\
-           \>                                    \> $\downarrow$ \\
-           \>                                    Output
-\end{tabbing}
-\end{minipage}
-}
-\caption{AgentOS Pipeline Architecture. User input flows through context engineering, planning, execution, safety verification, memory management, and reflection before producing output.}
+\includegraphics[width=0.95\linewidth]{agentos-architecture.pdf}
+\caption{AgentOS Pipeline Architecture. User input flows through: (1) Context Engineering for intent alignment, (2) ROMA + INTENT Planner for recursive decomposition, (3) HTAA + ToolTree Executor for tool selection, (4) MOSAIC Safety Check for threat detection, (5) InfiAgent + ChromaDB Memory for state management, and (6) REDEREF Reflection for self-improvement. Dangerous commands are refused at the safety layer.}
 \label{fig:architecture}
 \end{figure}
 

@@ -24,6 +24,8 @@ AgentOS is an **autonomous agent operating system** that integrates 9 state-of-t
 
 ## 📐 Architecture
 
+![AgentOS Architecture](docs/agentos-architecture.png)
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                      USER INPUT                              │
@@ -75,6 +77,83 @@ AgentOS is an **autonomous agent operating system** that integrates 9 state-of-t
 │  • Bounded context (~5K chars)                              │
 │  • Workspace snapshots                                       │
 └─────────────────────────────────────────────────────────────┘
+```
+
+## 🖥️ User Interface (CLI)
+
+AgentOS features an attractive **ASCII-art based CLI** with rich visual elements:
+
+### Opening the UI
+
+Simply run any AgentOS command — the UI appears automatically:
+
+```bash
+# View system info (shows ASCII banner + colored panels)
+agentos info
+
+# Show configuration (colored tables)
+agentos config show
+
+# Interactive wizard mode
+agentos wizard
+```
+
+### UI Components
+
+| Component | Description | Screenshot |
+|-----------|-------------|------------|
+| **ASCII Banner** | Pyfiglet-powered logo (571 fonts) | `___ /   |` |
+| **Rich Tables** | Colored configuration tables | Cyan/Green/Red |
+| **Panels** | Info/Error/Warning boxes | Bordered frames |
+| **Progress Spinners** | Animated loading indicators | Rotating chars |
+| **Interactive Menu** | CLI-based selection menus | Numbered options |
+
+### Example UI Screenshots
+
+**1. AgentOS Info Panel:**
+```
+___                    __  ____  _____
+   /   | ____ ____  ____  / /_/ __ \/ ___/
+  / /| |/ __ `/ _ \/ __ \/ __/ / / /\__ \ 
+ / ___ / /_/ /  __/ / / / /_/ /_/ /___/ / 
+/_/  |_\__, /\___/_/ /_/\__/\____//____/  
+      /____/                              
+
+  Autonomous Agent Framework with Built-in Safety
+  Version 0.1.0
+
+╭───────────────────────────────────────────────╮
+│ System Information                            │
+│───────────────────────────────────────────────│
+│ Python Version: 3.10+                         │
+│ OS: Linux                                     │
+│ Framework: AgentOS v0.1.0                      │
+╰───────────────────────────────────────────────╯
+```
+
+**2. Configuration Table:**
+```
+╭──────────────┬──────────────────────────────╮
+│   Setting    │           Value              │
+╡──────────────╇──────────────────────────────╨
+│ Model        │ minimax-m2.5-free            │
+│ Safety       │ ✓ Enabled                    │
+│ Budget       │ $1.00                        │
+╰──────────────┴──────────────────────────────╯
+```
+
+**3. Interactive Wizard:**
+```
+╔═══════════════════════════════════════════╗
+║         AgentOS Setup Wizard              ║
+╠═══════════════════════════════════════════╣
+║  1. Configure API Key                      ║
+║  2. Set Model Parameters                   ║
+║  3. Enable Safety Features                 ║
+║  4. Run First Task                         ║
+║  0. Exit                                   ║
+╚═══════════════════════════════════════════╝
+Select option:
 ```
 
 ## 🚀 Quick Start

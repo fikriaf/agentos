@@ -1,4 +1,4 @@
-"""AgentOS CLI - Main entry point."""
+"""AgentOS CLI - Main entry point with Enhanced UI."""
 
 import asyncio
 import os
@@ -10,6 +10,9 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt, Confirm
 from rich.table import Table
+from rich.style import Style
+from rich.text import Text
+from rich.box import ROUNDED, DOUBLE
 
 from agentos import __version__
 from agentos.config import get_config, save_config, AgentOSConfig
@@ -27,6 +30,10 @@ from agentos.models.task import TaskPlan, Action
 from agentos.models.tool import ToolRegistry
 from agentos.utils.logger import get_logger
 from agentos.utils.budget import BudgetTracker
+from agentos.ui import (
+    AgentOSBanner, AgentOSPanels, AgentOSTables, AgentOSMenu,
+    print_banner, print_success, print_error, print_warning, print_table
+)
 
 console = Console()
 logger = get_logger("agentos.cli")
@@ -40,8 +47,13 @@ def get_api_key() -> str:
 @click.group()
 @click.version_option(version=__version__)
 def cli():
-    """AgentOS - Autonomous Agent CLI Framework."""
-    pass
+    """AgentOS - Autonomous Agent CLI Framework with Built-in Safety."""
+    # Print welcome banner
+    print_banner("AgentOS")
+    console.print("")
+    console.print("[dim]  Autonomous Agent Framework with Built-in Safety[/dim]")
+    console.print("[dim]  Version {}[/dim]".format(__version__))
+    console.print("")
 
 
 # =============================================================================
