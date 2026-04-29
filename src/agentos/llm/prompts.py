@@ -65,13 +65,21 @@ Given a user task, decompose it into atomic subtasks that can be executed indepe
 - Maximum {max_parallel} tasks can run in parallel
 - Estimate cost for each task (token usage)
 - Identify dependencies between tasks
-- IMPORTANT: Generate CROSS-PLATFORM subtasks that work on BOTH Windows and Linux
 
-## Cross-Platform Guidelines
-- Use "python" not "python3"
-- Use explicit file paths: D:\\projects\\myflask\\app.py (Windows) or ~/projects/myflask/app.py (Linux)
-- For pip: "pip install" or "py -m pip install"
-- For venv: "python -m venv venv" then "venv\\Scripts\\activate" (Windows) or "source venv/bin/activate" (Linux)
+## Available Tools for Planning
+When planning, suggest the right tools:
+- **skills**: Use for research, loading skill knowledge
+- **file**: Use for reading/writing files, searching code
+- **web**: Use for web search, extracting content
+- **http**: Use for API calls, downloads
+- **bash**: Use for running commands
+
+Example subtasks with tools:
+- "Search arXiv for papers" → use tools: [skills] (load arxiv skill)
+- "Read the code" → use tools: [file] (file.read)
+- "Create a file" → use tools: [file] (file.write)
+- "Search web" → use tools: [web] (web.search)
+- "Install package" → use tools: [bash] (pip install)
 
 ## Output Format
 Return a JSON plan:
@@ -80,14 +88,28 @@ Return a JSON plan:
   "subtasks": [
     {{
       "id": 1,
-      "description": "Create a Flask app at D:\\projects\\myflask\\app.py with GET /api/items and POST /api/items endpoints",
-      "tools_needed": ["write_file", "bash"],
+      "description": "Search arXiv for latest agentic AI papers using arxiv skill",
+      "tools_needed": ["skills"],
       "dependencies": [],
-      "estimated_cost": 0.001
+      "estimated_cost": 0.005
+    }},
+    {{
+      "id": 2,
+      "description": "Extract paper content and identify research gaps", 
+      "tools_needed": ["web", "file"],
+      "dependencies": [1],
+      "estimated_cost": 0.003
+    }},
+    {{
+      "id": 3,
+      "description": "Write implementation code based on solution",
+      "tools_needed": ["file", "bash"],
+      "dependencies": [2],
+      "estimated_cost": 0.010
     }}
   ],
   "parallel_groups": [[1, 2], [3]],
-  "estimated_total_cost": 0.005
+  "estimated_total_cost": 0.018
 }}
 ```
 
@@ -96,7 +118,7 @@ Focus on:
 - Minimal dependencies
 - Efficient parallelization
 - Realistic cost estimation
-- Cross-platform compatible commands"""
+- Assign the RIGHT tool to each task"""
 
 # Safety check prompt (MOSAIC)
 SAFETY_PROMPT = """You are a safety checker following MOSAIC (Modular Open Security Agent Integration Concept).
@@ -136,7 +158,37 @@ Given a subtask and available tools, plan the exact tool calls needed.
 {subtask}
 
 ## Available Tools
-{tools}
+You have access to these tools:
+
+### bash
+Execute shell commands - use for:
+- Running commands (pip install, python, git, etc.)
+- Creating directories, files with shell commands
+- NEVER use vague descriptions - use actual commands
+
+### http  
+Make HTTP requests - use for:
+- Downloading files from URLs
+- Accessing APIs
+- Web requests
+
+### skills
+Manage and query skills - use for:
+- skills.list(category) - list available skills
+- skills.search(query) - search skills by keyword
+- skills.view(name) - load full skill content
+
+### file
+File operations - use for:
+- file.read(path) - read file content
+- file.write(path, content) - write file  
+- file.search(pattern) - search files by content
+- file.glob(pattern) - find files by name
+
+### web
+Web operations - use for:
+- web.search(query) - search the web
+- web.extract(urls) - extract content from URLs
 
 ## IMPORTANT: Cross-Platform Commands
 - Use commands that work on BOTH Windows AND Linux/WSL
@@ -151,6 +203,16 @@ Given a subtask and available tools, plan the exact tool calls needed.
 {{
   "tool_calls": [
     {{
+      "tool": "skills",
+      "args": {{"action": "view", "name": "arxiv"}},
+      "reason": "Load arxiv skill for paper search"
+    }},
+    {{
+      "tool": "file",
+      "args": {{"action": "write", "path": "D:/project/app.py", "content": "..."}},
+      "reason": "Create Flask app file"
+    }},
+    {{
       "tool": "bash",
       "args": {{"command": "python -m pip install flask"}},
       "reason": "Install Flask"
@@ -159,7 +221,7 @@ Given a subtask and available tools, plan the exact tool calls needed.
 }}
 ```
 
-Plan efficient, minimal tool sequences with cross-platform compatible commands."""
+Use the RIGHT tool for each job. Don't try to use bash for everything."""
 
 # Reflection prompt (REDEREF)
 REFLECTION_PROMPT = """Analyze the execution results and decide next steps.

@@ -293,9 +293,16 @@ async def _run_async(
     reflection = ReflectionAgent(llm, skills_context=skills_context)
 
     # Register default tools
+    from agentos.tools.skills import SkillsTool
+    from agentos.tools.files import FileTool
+    from agentos.tools.web import WebTool
+    
     tools = {
         "bash": ShellTool(),
         "http": HTTPClient(),
+        "skills": SkillsTool(),
+        "file": FileTool(),
+        "web": WebTool(),
     }
     for name, tool in tools.items():
         executor.register_tool(tool)

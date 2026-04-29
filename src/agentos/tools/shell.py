@@ -114,6 +114,29 @@ class ShellTool(BaseTool):
                 # Wrap in cmd /c for other commands
                 command = f"cmd /c {command}"
         
+        # Handle special Hermes tool commands inline
+        # These should be handled by dedicated tools, but we support inline for flexibility
+        if command.strip().startswith("skill_view ") or command.strip().startswith("skills list") or command.strip().startswith("skills search "):
+            # These are special - redirect to skills tool
+            parts = command.strip().split()
+            if len(parts) >= 2:
+                skill_name = parts[1] if parts[0] == "skill_view" else (parts[1] if parts[0] == "skills" and len(parts) > 2 else parts[-1])
+                from agentos.skills import SkillsManager
+                mgr = SkillsManager()
+                try:
+                    content = mgr.get_skill(skill_name)
+                    return ToolResult(
+                        success=True,
+                        output=content[:5000],
+                        execution_time=0,
+                    )
+                except Exception as e:
+                    return ToolResult(
+                        success=False,
+                        error=str(e),
+                        execution_time=0,
+                    )
+        
         logger.info(f"Executing: {command[:100]}...")
 
         try:
