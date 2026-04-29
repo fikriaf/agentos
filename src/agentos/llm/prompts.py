@@ -151,6 +151,7 @@ ALWAYS proceed for:
 - development commands: npm test, pytest, cargo test
 - code analysis and benchmarking
 - documentation generation
+- skills operations (skill_view, skills_list, skills_search) - these are SAFE
 
 REFUSE only for:
 - Dangerous commands: rm -rf, fork bombs, disk wipe

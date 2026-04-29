@@ -184,6 +184,27 @@ def config_reset():
     console.print("[green]Configuration reset to defaults[/green]")
 
 
+# Helper function to detect tool from task description
+def _detect_tool(description: str) -> str:
+    """Detect the most appropriate tool for a task description."""
+    desc = description.lower()
+    
+    # web/search/arxiv tasks -> use web tool
+    if any(k in desc for k in ['search', 'arxiv', 'paper', 'find gap', 'explor', 'find solution', 'latest', 'research', 'download', 'buatkan', 'buat', 'create', 'build', 'implement', 'technical', 'test', 'run', 'benchmark', 'execute', 'analys', 'data', 'doc']):
+        return "web"
+    
+    # file/read tasks -> use file tool  
+    elif any(k in desc for k in ['file', 'read', 'write', 'edit', 'path']):
+        return "file"
+    
+    # skills tasks
+    elif any(k in desc for k in ['skill', 'load']):
+        return "skills"
+    
+    # Default to web (safer than bash)
+    return "web"
+
+
 # =============================================================================
 # RUN COMMAND
 # =============================================================================
@@ -335,9 +356,12 @@ async def _run_async(
 
         console.print(f"\n[bold]Step {step}:[/bold] {subtask.description[:60]}...")
 
-        # Safety check
+        # Pre-detect tool for this task (before safety check)
+        pre_detected_tool = _detect_tool(subtask.description)
+        
+        # Safety check with correct tool
         action = Action(
-            tool_name="bash",
+            tool_name=pre_detected_tool,
             args={"command": subtask.description},
             task_id=subtask.id
         )

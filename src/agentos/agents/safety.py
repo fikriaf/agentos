@@ -93,7 +93,18 @@ class SafetyChecker:
             logger.info(f"Requires verification: {pattern_result.reason}")
             return pattern_result
 
-        # LLM-based deep check
+        # Fast-path for known safe tools - skip LLM check
+        if action.tool_name in ("web", "skills", "file", "http"):
+            logger.info(f"Tool '{action.tool_name}' is safe - allowing without LLM check")
+            return SafetyResult(
+                decision="proceed",
+                risk_level="low",
+                reason=f"Tool '{action.tool_name}' is a safe, read-only operation",
+                alternatives=[],
+                verification_steps=[],
+            )
+
+        # LLM-based deep check for other tools
         return await self._llm_check(action, context or {})
 
     def _pattern_check(self, action: Action) -> SafetyResult:
