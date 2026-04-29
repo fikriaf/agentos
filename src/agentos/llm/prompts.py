@@ -157,53 +157,71 @@ Given a subtask and available tools, plan the exact tool calls needed.
 ## Subtask
 {subtask}
 
-## Available Tools - USE THESE EXACT FORMATS:
+## Available Tools
+You have access to these tools:
 
 ### bash
-Shell commands - use for commands like:
-- "python -m pip install flask"
-- "git clone ..."
-- "python app.py"
+Execute shell commands - use for:
+- Running commands (pip install, python, git, etc.)
+- Creating directories, files with shell commands
+- NEVER use vague descriptions - use actual commands
 
-### http
-HTTP requests - use for APIs. Call arxiv API:
-- url: "https://export.arxiv.org/api/query?search_query=all:agentic+AI&start=0&max_results=5"
+### http  
+Make HTTP requests - use for:
+- Downloading files from URLs
+- Accessing APIs
+- Web requests
 
-### skills - FOR LOADING SKILLS ONLY
-Use to load skill content:
-- action: "view", name: "arxiv"
+### skills
+Manage and query skills - use for:
+- skills.list(category) - list available skills
+- skills.search(query) - search skills by keyword
+- skills.view(name) - load full skill content
 
-### file - FOR FILE OPERATIONS
-- action: "read", path: "/path/to/file.py"
-- action: "write", path: "output.txt", content: "hello"
+### file
+File operations - use for:
+- file.read(path) - read file content
+- file.write(path, content) - write file  
+- file.search(pattern) - search files by content
+- file.glob(pattern) - find files by name
 
-### web - FOR SEARCH AND EXTRACT
-- action: "search", query: "agentic AI 2026"
-- action: "extract", urls: ["https://..."]
+### web
+Web operations - use for:
+- web.search(query) - search the web
+- web.extract(urls) - extract content from URLs
 
-## Cross-Platform Commands
-- Use "python" not "python3"
-- For file paths: use explicit paths
-
-## Examples:
-- "Search arXiv for papers" → 
-  1. Load arxiv skill first to get API docs
-  2. Use http tool to call arxiv API
-  
-- "Search web for X" →
-  tool: "web", args: {"action": "search", "query": "X"}
-  
-- "Extract from URL" →
-  tool: "web", args: {"action": "extract", "urls": ["url1"]}
-
-- "Read a file" →
-  tool: "file", args: {"action": "read", "path": "/path/file.txt"}
-
-- "Install package" →
-  tool: "bash", args: {"command": "pip install flask"}
+## IMPORTANT: Cross-Platform Commands
+- Use commands that work on BOTH Windows AND Linux/WSL
+- NEVER use: ls, mkdir, rm, cat, cp, mv (these only work on Linux/Mac)
+- ALWAYS use: dir, md, del, type, copy, move (or wrap with cmd /c on Windows)
+- For file operations, use explicit paths like: D:\\projects\\myflask\\app.py
+- For Python: use "python" not "python3"
+- For pip: use "pip install" or "py -m pip install"
 
 ## Output Format
-Return JSON with tool_calls array. Each call needs tool name and args dict.
+```json
+{{
+  "tool_calls": [
+    {{
+      "tool": "skills",
+      "args": {{"action": "view", "name": "arxiv"}},
+      "reason": "Load arxiv skill for paper search"
+    }},
+    {{
+      "tool": "file",
+      "args": {{"action": "write", "path": "D:/project/app.py", "content": "..."}},
+      "reason": "Create Flask app file"
+    }},
+    {{
+      "tool": "bash",
+      "args": {{"command": "python -m pip install flask"}},
+      "reason": "Install Flask"
+    }}
+  ]
+}}
+```
+
+Use the RIGHT tool for each job. Don't try to use bash for everything."""
 
 # Reflection prompt (REDEREF)
 REFLECTION_PROMPT = """Analyze the execution results and decide next steps.
